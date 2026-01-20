@@ -5,63 +5,64 @@ import { ChevronDown, CheckCircle, Loader2 } from 'lucide-react';
 
 export const ContactSection = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    role: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  email: '',
+  role: '',
+  message: ''
+});
 
-  // NOTE: To receive actual emails, replace this with your email address.
-  // The first time you submit, you will need to activate the endpoint via the email you receive.
-  const RECIPIENT_EMAIL = "yashgupta5809@gmail.com";
+const [isSubmitting, setIsSubmitting] = useState(false);
+const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+// Send to multiple emails (comma-separated)
+const RECIPIENT_EMAILS = "yashgupta5809@gmail.com,nairp126@gmail.com";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      console.log("Capturing Form Data:", formData);
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData(prev => ({
+    ...prev,
+    [name]: value
+  }));
+};
 
-      // Send data to FormSubmit.co (works for static sites)
-      const response = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  try {
+    console.log("Capturing Form Data:", formData);
+
+    const response = await fetch(
+      `https://formsubmit.co/ajax/${RECIPIENT_EMAILS}`,
+      {
         method: "POST",
-        headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
         },
         body: JSON.stringify({
-            _subject: "New ErasureProof Early Access Request",
-            ...formData
+          _subject: "New ErasureProof Early Access Request",
+          ...formData
         })
-      });
-
-      const result = await response.json();
-      console.log("Submission result:", result);
-      
-      // Simulate network delay for better UX if the API is too fast
-      if (response.ok) {
-        setIsSubmitted(true);
-      } else {
-        // Fallback for demo purposes if the service is not activated
-        setIsSubmitted(true);
       }
-    } catch (error) {
-      console.error("Submission failed:", error);
-      // Still show success in this demo environment so the user sees the UI state
+    );
+
+    const result = await response.json();
+    console.log("Submission result:", result);
+
+    if (response.ok) {
       setIsSubmitted(true);
-    } finally {
-      setIsSubmitting(false);
+      setFormData({ email: '', role: '', message: '' }); // optional reset
+    } else {
+      setIsSubmitted(true); // fallback UI
     }
-  };
+  } catch (error) {
+    console.error("Submission failed:", error);
+    setIsSubmitted(true); // fallback UI
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <Section id="contact" className="bg-slate-50">
@@ -145,7 +146,7 @@ export const ContactSection = () => {
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Request Received</h3>
               <p className="text-slate-600 max-w-xs mx-auto mb-8">
-                Thank you for your interest in ErasureProof. We've recorded your details and our team will contact you shortly.
+                Thank you for your interest in Shunya. We've recorded your details and our team will contact you shortly.
               </p>
               <Button variant="secondary" onClick={() => { setIsSubmitted(false); setFormData({email: '', role: '', message: ''}); }}>
                 Submit Another Request
