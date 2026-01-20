@@ -14,7 +14,7 @@ export const ContactSection = () => {
 
   // NOTE: To receive actual emails, replace this with your email address.
   // The first time you submit, you will need to activate the endpoint via the email you receive.
-  const RECIPIENT_EMAIL = "tonyhaldi09@gmail.com";
+  const RECIPIENT_EMAIL = "yashgupta5809@gmail.com";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
